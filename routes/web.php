@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialiteController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -12,6 +14,22 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+if (config('app.env') === 'develop') {
+    Route::get('/clear-all', function () {
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('optimize:clear');
+        \Illuminate\Support\Facades\Auth::logout();
+
+        return redirect('/');
+    });
+}
+
+Route::get('auth/redirect/{provider}', [SocialiteController::class, 'redirectToProvider'])->name('auth.redirect');
+Route::get('auth/callback/{provider}', [SocialiteController::class, 'handleProviderCallback'])->name('auth.callback');
 
 Route::middleware([
     'auth:sanctum',

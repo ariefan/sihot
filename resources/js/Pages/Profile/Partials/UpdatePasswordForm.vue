@@ -49,7 +49,7 @@ const updatePassword = () => {
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="current_password" value="Current Password" />
+                <InputLabel for="current_password" value="Current Password (leave empty if not set)" />
                 <TextInput
                     id="current_password"
                     ref="currentPasswordInput"
