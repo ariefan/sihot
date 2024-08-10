@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\SocialiteController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,7 +16,7 @@ Route::get('/', function () {
     ]);
 });
 
-if (config('app.env') === 'develop') {
+if (App::environment('local')) {
     Route::get('/clear-all', function () {
         Artisan::call('cache:clear');
         Artisan::call('config:clear');
