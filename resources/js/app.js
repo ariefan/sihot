@@ -1,8 +1,9 @@
 import './bootstrap';
 import '../css/app.css';
+import { initFlowbite } from 'flowbite';
 
 import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/vue3';
+import { createInertiaApp, router } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
@@ -20,4 +21,12 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
+}).then(() => {
+    // on first load
+    initFlowbite();
+});
+
+router.on('success', (event) => {
+    // on each router load
+    initFlowbite();
 });
