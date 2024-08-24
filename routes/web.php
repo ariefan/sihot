@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SocialiteController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\BrandController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
@@ -42,6 +42,6 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::resources([
-        'users' => UserController::class,
+        'brands' => BrandController::class,
     ]);
 });

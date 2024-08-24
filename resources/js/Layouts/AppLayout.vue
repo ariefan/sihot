@@ -374,6 +374,9 @@ const logout = () => {
                                 <span class="block text-sm text-gray-900 truncate dark:text-white">
                                     {{ $page.props.auth.user.email }}
                                 </span>
+                                <span class="block text-sm text-gray-900 dark:text-white">
+                                    {{ $page.props.auth.user.role }}
+                                </span>
                             </div>
                             <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
                                 <li class="block px-4 py-2 text-xs text-gray-400">
@@ -390,12 +393,6 @@ const logout = () => {
                                         class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                     API Tokens
                                     </Link>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                        Account settings
-                                    </a>
                                 </li>
                             </ul>
                             <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
@@ -540,22 +537,21 @@ const logout = () => {
                                         clip-rule="evenodd" />
                                 </svg>
 
-                                <span class="flex-1 ml-3 whitespace-nowrap">User</span>
+                                <span class="flex-1 ml-3 whitespace-nowrap">Brand</span>
                             </a>
                         </li>
                     </ul>
                     <ul class="pt-5 mt-5 space-y-1 border-t border-gray-200 dark:border-gray-700 text-base">
                         <li>
-                            <a :href="route('telescope')" target="_blank"
+                            <Link :href="route('brands.index')" :active="route().current('brands.*')" target="_blank"
                                 class="flex items-center p-2 font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
-                                <svg class="flex-shrink-0 w-6 h-6" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 80 80">
-                                    <path
-                                        d="M0 40a39.87 39.87 0 0 1 11.72-28.28A40 40 0 1 1 0 40zm34 10a4 4 0 0 1-4-4v-2a2 2 0 1 0-4 0v2a4 4 0 0 1-4 4h-2a2 2 0 1 0 0 4h2a4 4 0 0 1 4 4v2a2 2 0 1 0 4 0v-2a4 4 0 0 1 4-4h2a2 2 0 1 0 0-4h-2zm24-24a6 6 0 0 1-6-6v-3a3 3 0 0 0-6 0v3a6 6 0 0 1-6 6h-3a3 3 0 0 0 0 6h3a6 6 0 0 1 6 6v3a3 3 0 0 0 6 0v-3a6 6 0 0 1 6-6h3a3 3 0 0 0 0-6h-3zm-4 36a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 28a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
-                                        class="fill-[#4040c8]"></path>
-                                </svg>
-                                <span class="ml-3">Telescope</span>
-                            </a>
+                            <svg class="flex-shrink-0 w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+                                <path
+                                    d="M0 40a39.87 39.87 0 0 1 11.72-28.28A40 40 0 1 1 0 40zm34 10a4 4 0 0 1-4-4v-2a2 2 0 1 0-4 0v2a4 4 0 0 1-4 4h-2a2 2 0 1 0 0 4h2a4 4 0 0 1 4 4v2a2 2 0 1 0 4 0v-2a4 4 0 0 1 4-4h2a2 2 0 1 0 0-4h-2zm24-24a6 6 0 0 1-6-6v-3a3 3 0 0 0-6 0v3a6 6 0 0 1-6 6h-3a3 3 0 0 0 0 6h3a6 6 0 0 1 6 6v3a3 3 0 0 0 6 0v-3a6 6 0 0 1 6-6h3a3 3 0 0 0 0-6h-3zm-4 36a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 28a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+                                    class="fill-[#4040c8]"></path>
+                            </svg>
+                            <span class="ml-3">Telescope</span>
+                            </Link>
                         </li>
                         <li>
                             <a :href="route('pulse')" target="_blank"
