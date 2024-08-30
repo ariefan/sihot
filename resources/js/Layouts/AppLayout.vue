@@ -768,7 +768,7 @@ const logout = () => {
                 </div>
             </aside>
 
-            <main class="p-4 md:ml-64 h-auto pt-20 min-h-screen">
+            <main class="p-4 md:ml-52 h-auto pt-20 min-h-screen">
                 <slot />
             </main>
         </div>

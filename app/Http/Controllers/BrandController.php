@@ -31,7 +31,7 @@ class BrandController extends Controller
 
         $brands = $query->get();
 
-        return Inertia::render('Brand/Index', [
+        return Inertia::render('Brands/Index', [
             'brands' => $brands,
         ]);
     }
