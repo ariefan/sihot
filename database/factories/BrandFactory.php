@@ -17,11 +17,11 @@ class BrandFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->uuid(),
-            'brand_name' => $this->faker->word(),
-            'brand_description' => $this->faker->sentence(),
-            'created_at' => $this->faker->dateTime(),
-            'updated_at' => $this->faker->dateTime(),
+            'id' => fake()->uuid(),
+            'brand_name' => fake()->name(),
+            'brand_description' => fake()->sentence(),
+            'created_at' => fake()->dateTime(),
+            'updated_at' => fake()->dateTime(),
         ];
     }
 }
