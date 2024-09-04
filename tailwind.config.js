@@ -52,5 +52,5 @@ export default {
 
     plugins: [forms, typography, flowbite],
 
-    darkMode: "media",
+    darkMode: "class",
 };
