@@ -1,10 +1,21 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 
 defineProps({});
 
+const switchToTeam = (team) => {
+    router.put(route('current-team.update'), {
+        team_id: team.id,
+    }, {
+        preserveState: false,
+    });
+};
+
+const logout = () => {
+    router.post(route('logout'));
+};
 </script>
 
 <template>
