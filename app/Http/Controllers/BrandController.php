@@ -16,22 +16,9 @@ class BrandController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Brand::query();
+        $brands = Brand::get();
 
-        // Sorting
-        $sort = $request->input('sort', 'brand_name');
-        $direction = $request->input('direction', 'asc');
-        $query->orderBy($sort, $direction);
-
-        // Filtering
-        $q = $request->input('q');
-        if ($q) {
-            $query->where('name', 'like', '%'.$q.'%');
-        }
-
-        $brands = $query->get();
-
-        return Inertia::render('Brand/Index', [
+        return Inertia::render('Brands/Index', [
             'brands' => $brands,
         ]);
     }
@@ -41,7 +28,9 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Brands/Form', [
+            'brand' => null,
+        ]);
     }
 
     /**
@@ -49,7 +38,15 @@ class BrandController extends Controller
      */
     public function store(StoreBrandRequest $request)
     {
-        //
+        try {
+            Brand::create($request->validated());
+
+            return redirect()->route('brands.index')
+                ->with('success', 'Brand created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Failed to store data. Please try again.');
+        }
     }
 
     /**
@@ -67,7 +64,9 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        //
+        return Inertia::render('Brands/Form', [
+            'brand' => $brand,
+        ]);
     }
 
     /**
@@ -75,7 +74,10 @@ class BrandController extends Controller
      */
     public function update(UpdateBrandRequest $request, Brand $brand)
     {
-        //
+        $brand->update($request->validated());
+
+        return redirect()->route('brands.index')
+            ->with('success', 'Brand updated successfully.');
     }
 
     /**
@@ -83,6 +85,9 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        //
+        $brand->delete();
+
+        return redirect()->route('brands.index')
+            ->with('success', 'Brand deleted successfully.');
     }
 }

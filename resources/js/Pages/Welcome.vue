@@ -107,7 +107,8 @@ defineProps({
                 <div class="relative h-full overflow-hidden">
                     <!-- Item 1 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="/images/slide-1.jpg" class="absolute block w-full h-full object-cover" alt="...">
+                        <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg"
+                            class="absolute block w-full h-full object-cover" alt="...">
                     </div>
                     <!-- Item 2 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
