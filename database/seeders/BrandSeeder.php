@@ -13,8 +13,6 @@ class BrandSeeder extends Seeder
     public function run(): void
     {
         Brand::truncate();
-        Brand::factory()
-            ->count(35)
-            ->create();
+        Brand::factory()->count(15)->create();
     }
 }

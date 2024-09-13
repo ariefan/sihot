@@ -1,14 +1,19 @@
 <script setup>
+import { router } from '@inertiajs/vue3'
+
 defineProps({
     type: {
         type: String,
         default: 'submit',
     },
+    href: String,
 });
+
+const goto = (url) => router.visit(url);
 </script>
 
 <template>
-    <button :type="type" class="
+    <button @click="href ? goto(router.visit(href)) : ''" :type="type" class="
         inline-flex
         items-center
         px-4

@@ -77,7 +77,7 @@ class BrandController extends Controller
         $brand->update($request->validated());
 
         return redirect()->route('brands.index')
-            ->with('success', 'Brand updated successfully.');
+            ->with('success', 'Data updated successfully.');
     }
 
     /**
@@ -88,6 +88,6 @@ class BrandController extends Controller
         $brand->delete();
 
         return redirect()->route('brands.index')
-            ->with('success', 'Brand deleted successfully.');
+            ->with('success', 'Data deleted successfully.');
     }
 }

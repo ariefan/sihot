@@ -29,7 +29,7 @@ defineProps({
         <header>
             <nav
                 class="backdrop-blur bg-white/30 dark:bg-gray-900/70 fixed w-full z-30 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-                <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 rounded-lg">
                     <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
                         <ApplicationLogo />
                         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
@@ -107,27 +107,27 @@ defineProps({
                 <div class="relative h-full overflow-hidden">
                     <!-- Item 1 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg"
+                        <img src="https://picsum.photos/1920/1080?random=1"
                             class="absolute block w-full h-full object-cover" alt="...">
                     </div>
                     <!-- Item 2 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-2.svg"
+                        <img src="https://picsum.photos/1920/1080?random=2"
                             class="absolute block w-full h-full object-cover" alt="...">
                     </div>
                     <!-- Item 3 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-3.svg"
+                        <img src="https://picsum.photos/1920/1080?random=3"
                             class="absolute block w-full h-full object-cover" alt="...">
                     </div>
                     <!-- Item 4 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-4.svg"
+                        <img src="https://picsum.photos/1920/1080?random=4"
                             class="absolute block w-full h-full object-cover" alt="...">
                     </div>
                     <!-- Item 5 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-5.svg"
+                        <img src="https://picsum.photos/1920/1080?random=5"
                             class="absolute block w-full h-full object-cover" alt="...">
                     </div>
                 </div>
@@ -176,13 +176,15 @@ defineProps({
             <!-- Hero Content -->
             <div
                 class="relative z-20 max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid lg:grid-cols-12">
-                <div class="mr-auto place-self-center lg:col-span-7">
+                <div class="mr-auto place-self-center lg:col-span-7 backdrop-blur bg-gray-700/50 p-4 rounded-lg">
                     <h1
                         class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
-                        Welcome to our page</h1>
-                    <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                        Welcome to our page
+                    </h1>
+                    <p class="max-w-2xl mb-6 font-light text-gray-50 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-100">
                         From checkout to global sales tax compliance, companies around the world use Flowbite to
-                        simplify their payment stack.</p>
+                        simplify their payment stack.
+                    </p>
                     <a href="#"
                         class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
                         Get started
@@ -192,10 +194,6 @@ defineProps({
                                 d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
                                 clip-rule="evenodd"></path>
                         </svg>
-                    </a>
-                    <a href="#"
-                        class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                        Speak to Sales
                     </a>
                 </div>
                 <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
@@ -301,3 +299,9 @@ defineProps({
     </footer>
 
 </template>
+
+<style>
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9)
+}
+</style>
