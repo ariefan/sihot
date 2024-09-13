@@ -33,14 +33,14 @@ const alert = computed(() => page.props.alert);
             <Sidebar />
 
             <!-- Page Heading -->
-            <header v-if="$slots.header" class="bg-white dark:bg-gray-800 shadow pt-16 md:ml-52">
-                <div class="max-w-7xl mx-auto py-2 px-4 sm:px-4 lg:px-6">
+            <header v-if="$slots.header" class="pt-16 md:ml-52">
+                <div class="max-w mx-auto py-2 px-4">
                     <slot name="header" />
                 </div>
             </header>
 
             <!-- Page Content -->
-            <main class="p-4 md:ml-52 h-auto min-h-screen" :class="{ 'pt-20': !$slots.header }">
+            <main class="px-4 md:ml-52 h-auto min-h-screen" :class="{ 'pt-20': !$slots.header }">
                 <Alert :alert="alert" />
                 <slot />
             </main>

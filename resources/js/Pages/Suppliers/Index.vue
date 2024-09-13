@@ -12,19 +12,22 @@ import Icon from '@/Components/Icon.vue';
 import ActionButton from '@/Components/ActionButton.vue';
 
 const props = defineProps({
-    brands: Array,
+    suppliers: Array,
 });
 
 const form = useForm({});
 
-const title = 'Merk';
+const title = 'Supplier';
 const breadcrumbs = [
     { name: 'Home', href: route('dashboard') },
     { name: title, href: '#' },
 ];
 const columns = [
-    { name: 'brand_name', label: 'Brand Name' },
-    { name: 'brand_description', label: 'Brand Description' },
+    { name: 'supplier_name', label: 'Nama Supplier' },
+    { name: 'contact_name', label: 'Nama Kontak' },
+    { name: 'address', label: 'Alamat' },
+    { name: 'phone', label: 'Telepon' },
+    { name: 'email', label: 'Email' },
 ];
 const perPageOptions = [10, 25, 50, 100];
 const perPage = ref(perPageOptions[0]);
@@ -34,18 +37,18 @@ const sortKey = ref('');
 const sortOrder = ref('');
 const uniqueKey = ref(0);
 
-// Filtered and ordered brands based on search query and sort parameters
-const filteredBrands = computed(() => {
+// Filtered and ordered suppliers based on search query and sort parameters
+const filteredProducts = computed(() => {
     return searchQuery.value
-        ? props.brands.filter((brand) =>
-            brand.brand_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-            brand.brand_description.toLowerCase().includes(searchQuery.value.toLowerCase())
+        ? props.suppliers.filter((supplier) =>
+            supplier.supplier_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            supplier.contact_name.toLowerCase().includes(searchQuery.value.toLowerCase())
         )
-        : props.brands;
+        : props.suppliers;
 });
 
-const orderedBrands = computed(() => {
-    return [...filteredBrands.value].sort((a, b) => {
+const orderedProducts = computed(() => {
+    return [...filteredProducts.value].sort((a, b) => {
         let modifier = sortOrder.value === 'asc' ? 1 : -1;
         if (a[sortKey.value] < b[sortKey.value]) return -1 * modifier;
         if (a[sortKey.value] > b[sortKey.value]) return 1 * modifier;
@@ -54,13 +57,13 @@ const orderedBrands = computed(() => {
 });
 
 // Computed properties for pagination
-const totalItems = computed(() => orderedBrands.value.length);
+const totalItems = computed(() => orderedProducts.value.length);
 const totalPages = computed(() => Math.ceil(totalItems.value / perPage.value));
 
-const paginatedBrands = computed(() => {
+const paginatedProducts = computed(() => {
     const start = (currentPage.value - 1) * perPage.value;
     const end = start + perPage.value;
-    return orderedBrands.value.slice(start, end);
+    return orderedProducts.value.slice(start, end);
 });
 
 // Item range display
@@ -103,7 +106,7 @@ watch([perPage, searchQuery], () => {
     uniqueKey.value++;
 });
 
-// Delete brand with confirmation
+// Delete supplier with confirmation
 const deleteAction = async (id) => {
     const result = await Swal.fire({
         title: 'Are you sure?',
@@ -117,7 +120,7 @@ const deleteAction = async (id) => {
 
     if (result.isConfirmed) {
         uniqueKey.value++;
-        form.delete(route("brands.destroy", id), {
+        form.delete(route("suppliers.destroy", id), {
             preserveScroll: true,
         });
     }
@@ -131,7 +134,7 @@ const deleteAction = async (id) => {
         </template>
 
         <div class="flex flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-            <SuccessButton :href="route('brands.create')">
+            <SuccessButton :href="route('suppliers.create')">
                 <Icon name="plus" class="mr-2" />
                 Tambah
             </SuccessButton>
@@ -194,7 +197,7 @@ const deleteAction = async (id) => {
             </thead>
 
             <tbody :key="uniqueKey">
-                <tr v-for="(item, index) in paginatedBrands" :key="index"
+                <tr v-for="(item, index) in paginatedProducts" :key="index"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <template v-for="(value, key) in item" :key="key">
                         <td v-if="columns.some(column => column.name === key)" class="px-4 py-2">
@@ -204,13 +207,13 @@ const deleteAction = async (id) => {
                     <td class="m-0 p-0">
                         <div class="inline-flex rounded-md mt-1">
                             <!-- Show Button -->
-                            <ActionButton color="cyan" :href="route('brands.show', item.id)"
+                            <ActionButton color="cyan" :href="route('suppliers.show', item.id)"
                                 :data-tooltip-target="`tooltip-edit-${item.id}`" class="rounded-s hidden">
                                 <Icon name="info" class="w-4 h-4" />
                             </ActionButton>
                             <Tooltip :id="`tooltip-show-${item.id}`">Show</Tooltip>
                             <!-- Edit Button -->
-                            <ActionButton color="yellow" :href="route('brands.edit', item.id)"
+                            <ActionButton color="yellow" :href="route('suppliers.edit', item.id)"
                                 :data-tooltip-target="`tooltip-edit-${item.id}`" class="rounded-s">
                                 <Icon name="pencil" class="w-4 h-4" />
                             </ActionButton>

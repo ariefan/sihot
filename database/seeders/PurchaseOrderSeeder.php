@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Brand;
+use App\Models\PurchaseOrder;
 use Illuminate\Database\Seeder;
 
-class BrandSeeder extends Seeder
+class PurchaseOrderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Brand::truncate();
-        Brand::factory()->count(15)->create();
+        PurchaseOrder::truncate();
+        PurchaseOrder::factory()->count(15)->create();
     }
 }

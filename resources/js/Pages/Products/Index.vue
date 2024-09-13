@@ -12,19 +12,32 @@ import Icon from '@/Components/Icon.vue';
 import ActionButton from '@/Components/ActionButton.vue';
 
 const props = defineProps({
-    brands: Array,
+    products: Array,
 });
 
 const form = useForm({});
 
-const title = 'Merk';
+const title = 'Produk';
 const breadcrumbs = [
     { name: 'Home', href: route('dashboard') },
     { name: title, href: '#' },
 ];
+const data = props.products.map(item => ({
+    id: item.id,
+    product_name: item.product_name,
+    brand_name: item.brand.brand_name,
+    tag: item.tag,
+    product_description: item.product_description,
+    price: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(item.price),
+    updated_at: new Date(item.updated_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
+}));
 const columns = [
-    { name: 'brand_name', label: 'Brand Name' },
-    { name: 'brand_description', label: 'Brand Description' },
+    { name: 'product_name', label: 'Nama Produk' },
+    { name: 'brand_name', label: 'Merk' },
+    { name: 'tag', label: 'Tag' },
+    { name: 'product_description', label: 'Deskripsi Produk' },
+    { name: 'price', label: 'Harga' },
+    { name: 'updated_at', label: 'Tanggal Update' },
 ];
 const perPageOptions = [10, 25, 50, 100];
 const perPage = ref(perPageOptions[0]);
@@ -34,18 +47,17 @@ const sortKey = ref('');
 const sortOrder = ref('');
 const uniqueKey = ref(0);
 
-// Filtered and ordered brands based on search query and sort parameters
-const filteredBrands = computed(() => {
+const filteredData = computed(() => {
     return searchQuery.value
-        ? props.brands.filter((brand) =>
-            brand.brand_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-            brand.brand_description.toLowerCase().includes(searchQuery.value.toLowerCase())
+        ? data.filter((product) =>
+            product.product_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            product.product_description.toLowerCase().includes(searchQuery.value.toLowerCase())
         )
-        : props.brands;
+        : data;
 });
 
-const orderedBrands = computed(() => {
-    return [...filteredBrands.value].sort((a, b) => {
+const orderedData = computed(() => {
+    return [...filteredData.value].sort((a, b) => {
         let modifier = sortOrder.value === 'asc' ? 1 : -1;
         if (a[sortKey.value] < b[sortKey.value]) return -1 * modifier;
         if (a[sortKey.value] > b[sortKey.value]) return 1 * modifier;
@@ -54,13 +66,13 @@ const orderedBrands = computed(() => {
 });
 
 // Computed properties for pagination
-const totalItems = computed(() => orderedBrands.value.length);
+const totalItems = computed(() => orderedData.value.length);
 const totalPages = computed(() => Math.ceil(totalItems.value / perPage.value));
 
-const paginatedBrands = computed(() => {
+const paginatedData = computed(() => {
     const start = (currentPage.value - 1) * perPage.value;
     const end = start + perPage.value;
-    return orderedBrands.value.slice(start, end);
+    return orderedData.value.slice(start, end);
 });
 
 // Item range display
@@ -103,7 +115,7 @@ watch([perPage, searchQuery], () => {
     uniqueKey.value++;
 });
 
-// Delete brand with confirmation
+// Delete product with confirmation
 const deleteAction = async (id) => {
     const result = await Swal.fire({
         title: 'Are you sure?',
@@ -117,7 +129,7 @@ const deleteAction = async (id) => {
 
     if (result.isConfirmed) {
         uniqueKey.value++;
-        form.delete(route("brands.destroy", id), {
+        form.delete(route("products.destroy", id), {
             preserveScroll: true,
         });
     }
@@ -131,7 +143,7 @@ const deleteAction = async (id) => {
         </template>
 
         <div class="flex flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-            <SuccessButton :href="route('brands.create')">
+            <SuccessButton :href="route('products.create')">
                 <Icon name="plus" class="mr-2" />
                 Tambah
             </SuccessButton>
@@ -187,14 +199,14 @@ const deleteAction = async (id) => {
                             </svg>
                         </div>
                     </th>
-                    <th scope="col" class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
+                    <th scope="col" class="px-4 py-2">
                         Action
                     </th>
                 </tr>
             </thead>
 
             <tbody :key="uniqueKey">
-                <tr v-for="(item, index) in paginatedBrands" :key="index"
+                <tr v-for="(item, index) in paginatedData" :key="index"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <template v-for="(value, key) in item" :key="key">
                         <td v-if="columns.some(column => column.name === key)" class="px-4 py-2">
@@ -204,13 +216,13 @@ const deleteAction = async (id) => {
                     <td class="m-0 p-0">
                         <div class="inline-flex rounded-md mt-1">
                             <!-- Show Button -->
-                            <ActionButton color="cyan" :href="route('brands.show', item.id)"
+                            <ActionButton color="cyan" :href="route('products.show', item.id)"
                                 :data-tooltip-target="`tooltip-edit-${item.id}`" class="rounded-s hidden">
                                 <Icon name="info" class="w-4 h-4" />
                             </ActionButton>
                             <Tooltip :id="`tooltip-show-${item.id}`">Show</Tooltip>
                             <!-- Edit Button -->
-                            <ActionButton color="yellow" :href="route('brands.edit', item.id)"
+                            <ActionButton color="yellow" :href="route('products.edit', item.id)"
                                 :data-tooltip-target="`tooltip-edit-${item.id}`" class="rounded-s">
                                 <Icon name="pencil" class="w-4 h-4" />
                             </ActionButton>

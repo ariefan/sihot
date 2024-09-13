@@ -7,18 +7,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Brand extends Model
+class Supplier extends Model
 {
     use HasFactory;
     use HasUuids;
 
     protected $fillable = [
-        'brand_name',
-        'brand_description',
+        'supplier_name',
+        'contact_name',
+        'address',
+        'phone',
+        'email',
     ];
 
-    public function products(): HasMany
+    public function purchaseOrders(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(PurchaseOrder::class);
     }
 }

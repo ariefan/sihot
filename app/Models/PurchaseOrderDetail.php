@@ -5,20 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Brand extends Model
+class PurchaseOrderDetail extends Model
 {
     use HasFactory;
     use HasUuids;
 
     protected $fillable = [
-        'brand_name',
-        'brand_description',
+        'purchase_order_id',
+        'product_id',
+        'quantity',
+        'unit_price',
+        'total_price',
     ];
 
-    public function products(): HasMany
+    public function purchaseOrder()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(PurchaseOrder::class);
     }
 }

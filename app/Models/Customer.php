@@ -5,20 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Brand extends Model
+class Customer extends Model
 {
     use HasFactory;
     use HasUuids;
 
     protected $fillable = [
-        'brand_name',
-        'brand_description',
+        'customer_name',
+        'contact_name',
+        'address',
+        'phone',
+        'email',
     ];
-
-    public function products(): HasMany
-    {
-        return $this->hasMany(Product::class);
-    }
 }

@@ -37,14 +37,14 @@ const saveAction = () => {
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AppLayout :title="title">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 <Breadcrumb :title="title" :breadcrumbs="breadcrumbs" />
             </h2>
         </template>
 
-        <Card>
+        <Card class="p-4">
             <form @submit.prevent="saveAction">
 
                 <div class="grid grid-cols-2 gap-2">

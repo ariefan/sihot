@@ -1,11 +1,14 @@
 import './bootstrap';
 import '../css/app.css';
+import utils from './utils';
 import { initFlowbite } from 'flowbite';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp, router } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+
+window.utils = utils;
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

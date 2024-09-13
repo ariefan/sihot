@@ -40,6 +40,48 @@ defineProps({});
                     </a>
                 </li>
                 <li>
+                    <Link :href="route('brands.index')"
+                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <span class="ml-3">Merk</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link :href="route('products.index')"
+                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <span class="ml-3">Produk</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link :href="route('suppliers.index')"
+                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <span class="ml-3">Supplier</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link :href="route('suppliers.index')"
+                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <span class="ml-3">Customer</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link :href="route('purchase-orders.index')"
+                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <span class="ml-3">Purchase Order</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link :href="route('purchase-orders.index')"
+                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <span class="ml-3">Sales Order</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link :href="route('suppliers.index')"
+                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <span class="ml-3">Inventori</span>
+                    </Link>
+                </li>
+                <!-- <li>
                     <button type="button"
                         class="flex items-center p-2 w-full font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                         aria-controls="dropdown-pages" data-collapse-toggle="dropdown-pages">
@@ -60,16 +102,16 @@ defineProps({});
                     </button>
                     <ul id="dropdown-pages" class="hidden py-2 space-y-1">
                         <li>
-                            <a href="#"
+                            <Link :href="route('brands.index')" :active="route().current('brands.*')"
                                 class="flex items-center p-2 pl-11 w-full font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                                Produk
-                            </a>
+                            Merk
+                            </Link>
                         </li>
                         <li>
-                            <a href="#"
+                            <Link :href="route('products.index')"
                                 class="flex items-center p-2 pl-11 w-full font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                                Merk
-                            </a>
+                            Produk
+                            </Link>
                         </li>
                         <li>
                             <a href="#"
@@ -118,35 +160,7 @@ defineProps({});
                             4
                         </span>
                     </a>
-                </li>
-                <li>
-                    <Link :href="route('brands.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                        viewBox="0 0 24 24">
-                        <path fill-rule="evenodd"
-                            d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
-                            clip-rule="evenodd" />
-                    </svg>
-
-                    <span class="flex-1 ml-3 whitespace-nowrap">Sales</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('brands.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                        viewBox="0 0 24 24">
-                        <path fill-rule="evenodd"
-                            d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z"
-                            clip-rule="evenodd" />
-                    </svg>
-
-                    <span class="flex-1 ml-3 whitespace-nowrap">Sales</span>
-                    </Link>
-                </li>
+                </li> -->
             </ul>
             <ul class="pt-5 mt-5 space-y-1 border-t border-gray-200 dark:border-gray-700 text-base">
                 <li>
