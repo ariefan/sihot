@@ -1,7 +1,6 @@
-<!--
-    Created by: Ariefan Dipokusumo Wibowo, last update 2024-01-20
--->
 <script setup>
+// Created by: Ariefan Dipokusumo Wibowo, last update 2024-09-20
+
 import { ref, computed, defineProps, onMounted } from 'vue';
 
 const props = defineProps(['data', 'headers', 'sortable', 'pageSize']);
@@ -129,13 +128,6 @@ onMounted(() => { });
                 @input="applyFilter" />
         </div>
     </div>
-
-
-
-
-
-
-
 
     <table class="table">
         <thead>

@@ -8,10 +8,11 @@ import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Breadcrumb from '@/Components/Breadcrumb.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { FwbInput, FwbTextarea, FwbButton } from 'flowbite-vue';
 
 // Props to receive the brand when editing
 const props = defineProps({
-    brand: Object, // This will be null when creating a brand
+    brand: Object,
 });
 
 // Initialize the form with useForm, setting initial values
@@ -44,34 +45,25 @@ const saveAction = () => {
             </h2>
         </template>
 
-        <Card class="p-4">
-            <form @submit.prevent="saveAction">
+        <!-- <Card class="p-4"> -->
+        <form @submit.prevent="saveAction">
 
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <InputLabel for="brand_name" value="Brand Name" />
-                        <TextInput id="brand_name" v-model="form.brand_name" />
-                        <InputError :message="form.errors.brand_name" />
-                    </div>
-
-                    <div>
-                        <label for="brand_description"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-200">Description</label>
-                        <textarea id="brand_description" v-model="form.brand_description"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                            :class="{ 'border-red-500': form.errors.brand_description }"></textarea>
-                        <span v-if="form.errors.brand_description" class="text-red-500 text-sm">
-                            {{ form.errors.brand_description }}
-                        </span>
-                    </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <fwb-input v-model="form.brand_name" label="Brand Name" />
+                    <InputError :message="form.errors.brand_name" />
                 </div>
-                <div class="flex justify-end mt-2">
-                    <PrimaryButton type="submit">
-                        Simpan
-                    </PrimaryButton>
-                </div>
-            </form>
 
-        </Card>
+                <div>
+                    <fwb-textarea v-model="form.brand_description" :rows="4" label="Description" />
+                    <InputError :message="form.errors.brand_description" />
+                </div>
+            </div>
+            <div class="flex justify-end mt-2">
+                <fwb-button pill type="submit">Simpan</fwb-button>
+            </div>
+        </form>
+
+        <!-- </Card> -->
     </AppLayout>
 </template>

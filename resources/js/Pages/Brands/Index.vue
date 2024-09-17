@@ -2,14 +2,13 @@
 import { ref, computed, watch } from 'vue';
 import { Link, useForm } from '@inertiajs/vue3';
 import Tooltip from '@/Components/Tooltip.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import Swal from 'sweetalert2';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Card from '@/Components/Card.vue';
-import Pagination from '@/Components/Pagination.vue';
-import Breadcrumb from '@/Components/Breadcrumb.vue';
 import SuccessButton from '@/Components/SuccessButton.vue';
-import Icon from '@/Components/Icon.vue';
-import ActionButton from '@/Components/ActionButton.vue';
+import { ActionButton, Breadcrumb, Button, Icon, Pagination, SortIcon } from '@/Components';
+import { FwbButton } from 'flowbite-vue';
+
 
 const props = defineProps({
     brands: Array,
@@ -32,9 +31,7 @@ const currentPage = ref(1);
 const searchQuery = ref('');
 const sortKey = ref('');
 const sortOrder = ref('');
-const uniqueKey = ref(0);
 
-// Filtered and ordered brands based on search query and sort parameters
 const filteredBrands = computed(() => {
     return searchQuery.value
         ? props.brands.filter((brand) =>
@@ -57,34 +54,11 @@ const orderedBrands = computed(() => {
 const totalItems = computed(() => orderedBrands.value.length);
 const totalPages = computed(() => Math.ceil(totalItems.value / perPage.value));
 
-const paginatedBrands = computed(() => {
+const paginatedData = computed(() => {
     const start = (currentPage.value - 1) * perPage.value;
     const end = start + perPage.value;
     return orderedBrands.value.slice(start, end);
 });
-
-// Item range display
-const startItemIndex = computed(() => (currentPage.value - 1) * perPage.value + 1);
-const endItemIndex = computed(() => Math.min(currentPage.value * perPage.value, totalItems.value));
-
-// Change page handlers
-const changePage = (page) => {
-    if (page >= 1 && page <= totalPages.value) {
-        currentPage.value = page;
-    }
-};
-
-const nextPage = () => {
-    if (currentPage.value < totalPages.value) {
-        currentPage.value += 1;
-    }
-};
-
-const prevPage = () => {
-    if (currentPage.value > 1) {
-        currentPage.value -= 1;
-    }
-};
 
 // Sort key setter
 const setSortKey = (key) => {
@@ -94,14 +68,7 @@ const setSortKey = (key) => {
         sortKey.value = key;
         sortOrder.value = 'asc';
     }
-    uniqueKey.value++;
 };
-
-// Watchers to reset the page and force re-render when filters change
-watch([perPage, searchQuery], () => {
-    currentPage.value = 1;
-    uniqueKey.value++;
-});
 
 // Delete brand with confirmation
 const deleteAction = async (id) => {
@@ -116,7 +83,6 @@ const deleteAction = async (id) => {
     });
 
     if (result.isConfirmed) {
-        uniqueKey.value++;
         form.delete(route("brands.destroy", id), {
             preserveScroll: true,
         });
@@ -130,11 +96,13 @@ const deleteAction = async (id) => {
             <Breadcrumb :title="title" :breadcrumbs="breadcrumbs" />
         </template>
 
-        <div class="flex flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-            <SuccessButton :href="route('brands.create')">
-                <Icon name="plus" class="mr-2" />
+        <div class="flex flex-wrap space-y-4 sm:space-y-0 items-center justify-between mb-4">
+            <Button color="green" :href="route('brands.create')">
+                <template #prefix>
+                    <Icon name="plus" />
+                </template>
                 Tambah
-            </SuccessButton>
+            </Button>
         </div>
 
         <!-- Table -->
@@ -168,68 +136,85 @@ const deleteAction = async (id) => {
             </div>
         </div>
 
-        <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-300">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-300">
-                <tr>
-                    <th v-for="(column, key) in columns" :key="key" scope="col"
-                        class="px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                        @click="setSortKey(column.name)">
-                        <div class="flex items-center justify-between">
-                            {{ column.label }}
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                                height="24" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    :class="{ 'text-black dark:text-white': sortKey === column.name && sortOrder === 'asc', 'text-gray-500 dark:text-gray-400': !(sortKey === column.name && sortOrder === 'asc') }"
-                                    d="M12.832 3.445a1 1 0 0 0-1.664 0l-4 6A1 1 0 0 0 8 11h8a1 1 0 0 0 .832-1.555l-4-6Z" />
-                                <path
-                                    :class="{ 'text-black dark:text-white': sortKey === column.name && sortOrder === 'desc', 'text-gray-500 dark:text-gray-400': !(sortKey === column.name && sortOrder === 'desc') }"
-                                    d="M11.168 20.555a1 1 0 0 0 1.664 0l4-6A1 1 0 0 0 16 13H8a1 1 0 0 0-.832 1.555l4 6Z" />
-                            </svg>
-                        </div>
-                    </th>
-                    <th scope="col" class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
-                        Action
-                    </th>
-                </tr>
-            </thead>
+        <div class="relative overflow-x-auto overflow-y-hidden shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-300">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th v-for="(column, key) in columns" :key="key" scope="col"
+                            class="px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                            :class="{ 'text-right': column.align === 'right' }" @click="setSortKey(column.name)">
+                            <div class="flex items-center justify-between">
+                                {{ column.label }}
+                                <SortIcon :sortKey="sortKey" :sortOrder="sortOrder" :columnName="column.name" />
+                            </div>
+                        </th>
+                        <th scope="col"
+                            class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-right">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
 
-            <tbody :key="uniqueKey">
-                <tr v-for="(item, index) in paginatedBrands" :key="index"
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <template v-for="(value, key) in item" :key="key">
-                        <td v-if="columns.some(column => column.name === key)" class="px-4 py-2">
-                            {{ value }}
+                <tbody>
+                    <tr v-for="(item, index) in paginatedData" :key="index"
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <template v-for="(value, key) in item" :key="key">
+                            <td v-if="columns.some(column => column.name === key)" class="px-4 py-2">
+                                {{ value }}
+                            </td>
+                        </template>
+                        <td class="py-0 px-4 text-right">
+                            <div class="inline-flex rounded-md mt-1.5">
+                                <!-- Show Button -->
+                                <ActionButton color="cyan" :href="route('brands.show', item.id)"
+                                    :data-tooltip-target="`tooltip-edit-${item.id}`" class="rounded-s hidden">
+                                    <Icon name="info" class="w-4 h-4" />
+                                </ActionButton>
+                                <Tooltip :id="`tooltip-show-${item.id}`">Show</Tooltip>
+                                <!-- Edit Button -->
+                                <ActionButton color="yellow" :href="route('brands.edit', item.id)"
+                                    :data-tooltip-target="`tooltip-edit-${item.id}`" class="rounded-s">
+                                    <Icon name="pencil" class="w-4 h-4" />
+                                </ActionButton>
+                                <Tooltip :id="`tooltip-edit-${item.id}`">Edit</Tooltip>
+                                <!-- Delete Button -->
+                                <ActionButton color="red" @click.prevent="deleteAction(item.id)"
+                                    :data-tooltip-target="`tooltip-delete-${item.id}`" class="rounded-e">
+                                    <Icon name="close" class="w-4 h-4" />
+                                </ActionButton>
+                                <Tooltip :id="`tooltip-delete-${item.id}`">Delete</Tooltip>
+                            </div>
                         </td>
-                    </template>
-                    <td class="m-0 p-0">
-                        <div class="inline-flex rounded-md mt-1">
-                            <!-- Show Button -->
-                            <ActionButton color="cyan" :href="route('brands.show', item.id)"
-                                :data-tooltip-target="`tooltip-edit-${item.id}`" class="rounded-s hidden">
-                                <Icon name="info" class="w-4 h-4" />
-                            </ActionButton>
-                            <Tooltip :id="`tooltip-show-${item.id}`">Show</Tooltip>
-                            <!-- Edit Button -->
-                            <ActionButton color="yellow" :href="route('brands.edit', item.id)"
-                                :data-tooltip-target="`tooltip-edit-${item.id}`" class="rounded-s">
-                                <Icon name="pencil" class="w-4 h-4" />
-                            </ActionButton>
-                            <Tooltip :id="`tooltip-edit-${item.id}`">Edit</Tooltip>
-                            <!-- Delete Button -->
-                            <ActionButton color="red" @click.prevent="deleteAction(item.id)"
-                                :data-tooltip-target="`tooltip-delete-${item.id}`" class="rounded-e">
-                                <Icon name="close" class="w-4 h-4" />
-                            </ActionButton>
-                            <Tooltip :id="`tooltip-delete-${item.id}`">Delete</Tooltip>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- Pagination -->
-        <Pagination :currentPage="currentPage" :totalPages="totalPages" :startItemIndex="startItemIndex"
-            :endItemIndex="endItemIndex" :totalItems="totalItems" @changePage="changePage" @nextPage="nextPage"
-            @prevPage="prevPage" />
+        <Pagination v-model="currentPage" :per-page="perPage" :total-items="totalItems" :total-pages="totalPages"
+            :show-labels="false" show-icons />
+
+        <!-- Delete Team Confirmation Modal -->
+        <!-- <ConfirmationModal :show="confirmingTeamDeletion" @close="confirmingTeamDeletion = false">
+            <template #title>
+                Hapus Data
+            </template>
+
+            <template #content>
+                Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be
+                permanently deleted.
+            </template>
+
+            <template #footer>
+                <SecondaryButton @click="confirmingTeamDeletion = false">
+                    Batal
+                </SecondaryButton>
+
+                <DangerButton class="ms-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
+                    @click="deleteTeam">
+                    Hapus Data
+                </DangerButton>
+            </template>
+        </ConfirmationModal> -->
     </AppLayout>
 </template>
