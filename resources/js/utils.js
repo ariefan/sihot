@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 const utils = {
     date: {
         // Formats a JavaScript Date object into a readable string
@@ -42,6 +44,31 @@ const utils = {
             img.src = url;
             img.onload = callback;
         },
+    },
+
+    confirm: function (options = {}) {
+        return Swal.fire({
+            title:
+                options.title || "Apakah Anda yakin ingin menghapus data ini?",
+            text:
+                options.text ||
+                "Tindakan ini tidak dapat dibatalkan, dan data yang dihapus tidak akan bisa dikembalikan!",
+            icon: options.icon || "warning",
+            width: options.width || "32em",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Delete Data",
+            customClass: {
+                popup: "bg-white dark:bg-gray-800",
+                title: "text-gray-900 dark:text-gray-100",
+                htmlContainer: "!text-gray-700 dark:!text-gray-200",
+                confirmButton:
+                    "bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 rounded-full",
+                cancelButton:
+                    "bg-gray-600 hover:bg-gray-700 text-white dark:bg-gray-500 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-800 rounded-full",
+            },
+        });
     },
 };
 

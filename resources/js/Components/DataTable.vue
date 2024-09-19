@@ -1,188 +1,137 @@
 <script setup>
 // Created by: Ariefan Dipokusumo Wibowo, last update 2024-09-20
 
-import { ref, computed, defineProps, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { Link, useForm } from '@inertiajs/vue3';
+import { Pagination, SortIcon, Icon } from '@/Components';
+import { FwbInput } from 'flowbite-vue';
 
-const props = defineProps(['data', 'headers', 'sortable', 'pageSize']);
+const props = defineProps({
+    data: Array,
+    columns: Array,
+});
 
-const pageSize = ref(props.pageSize || 10);
+const perPageOptions = [10, 25, 50, 100];
+const perPage = ref(perPageOptions[0]);
 const currentPage = ref(1);
-const filterValue = ref('');
-const columnFilter = ref('');
-const sortColumn = ref('');
-const ascending = ref(true);
-
-const pageSizeList = computed(() => {
-    const sizes = [10, 25, 50, 100];
-    if (props.pageSize && !sizes.includes(props.pageSize)) {
-        sizes.push(props.pageSize);
-    }
-    return sizes.sort((a, b) => a - b);
-});
-
-const headers = computed(() => {
-    const headers = [];
-    if (props.data.length > 0) {
-        for (const key in props.data[0]) {
-            headers.push(key);
-        }
-    }
-    return headers;
-});
-
-const sortedData = computed(() => {
-    if (props.sortable && sortColumn.value >= 0) {
-        const sorted = [...props.data].sort((a, b) => {
-            const key = Object.keys({ ...a })[sortColumn.value];
-            const valueA = { ...a }[key];
-            const valueB = { ...b }[key];
-            if (typeof valueA === 'string' && typeof valueB === 'string') {
-                const compareValue = valueA.localeCompare(valueB);
-                return ascending.value ? compareValue : -compareValue;
-            } else {
-                return ascending.value ? valueA - valueB : valueB - valueA;
-            }
-        });
-        return sorted || [];
-    }
-    return props.data || [];
-});
+const q = ref('');
+const sortKey = ref('');
+const sortOrder = ref('');
 
 const filteredData = computed(() => {
-    return sortedData.value.filter(item => {
-        return Object.entries(item).some(([key, value]) => {
-            return columnFilter.value === '' || key === columnFilter.value;
-        }) && Object.values(item).some(value => value?.toString().toLowerCase().includes(filterValue.value.toLowerCase()));
+    return q.value
+        ? props.data.filter((item) =>
+            Object.values(item).some(value =>
+                String(value).toLowerCase().includes(q.value.toLowerCase())
+            )
+        )
+        : props.data;
+});
+
+const orderedData = computed(() => {
+    return [...filteredData.value].sort((a, b) => {
+        let modifier = sortOrder.value === 'asc' ? 1 : -1;
+        if (a[sortKey.value] < b[sortKey.value]) return -1 * modifier;
+        if (a[sortKey.value] > b[sortKey.value]) return 1 * modifier;
+        return 0;
     });
 });
 
-const totalPages = computed(() => {
-    return Math.ceil(filteredData.value.length / pageSize.value);
+// Computed properties for pagination
+const totalItems = computed(() => orderedData.value.length);
+const totalPages = computed(() => Math.ceil(totalItems.value / perPage.value));
+
+const paginatedData = computed(() => {
+    const start = (currentPage.value - 1) * perPage.value;
+    const end = start + perPage.value;
+    return orderedData.value.slice(start, end);
 });
 
-const displayedData = computed(() => {
-    const start = (currentPage.value - 1) * pageSize.value;
-    const end = start + pageSize.value;
-    return filteredData.value.slice(start, end);
-});
-
-const toggleSort = (column) => {
-    if (props.sortable) {
-        if (sortColumn.value === column) {
-            ascending.value = !ascending.value;
-        } else {
-            sortColumn.value = column;
-            ascending.value = true;
-        }
+// Sort key setter
+const setSortKey = (key) => {
+    if (sortKey.value === key) {
+        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortKey.value = key;
+        sortOrder.value = 'asc';
     }
 };
-
-const applyFilter = () => {
-    currentPage.value = 1;
-};
-
-const goToPage = (page) => {
-    if (page >= 1 && page <= totalPages.value) {
-        links.value[currentPage.value - 1].active = false;
-        links.value[page - 1].active = true;
-        currentPage.value = page;
-    }
-};
-
-const links = computed(() => {
-    const links = [];
-    for (let i = 1; i <= totalPages.value; i++) {
-        links.push({
-            label: i,
-            active: i === currentPage.value,
-        });
-    }
-    return links;
-});
-
-onMounted(() => { });
-// watch(() => columnFilter.value, () => {
-//     applyFilter();
-// });
 </script>
 
 <template>
-    <div class="flex justify-between">
-        <div class="ml-2 mt-2">
-            <span class="join-item text-xs px-1 font-normal">Show</span>
-            <select class="select select-bordered select-xs join-item py-0 text-sm" v-model="pageSize"
-                @change="applyFilter">
-                <option v-for="size in pageSizeList" :value="size" :key="size">{{ size }}</option>
-            </select>
-            <span class="join-item text-sm px-1 font-normal">entries</span>
-        </div>
-        <div class="join">
-            <select class="select select-bordered select-ghost select-sm join-item py-0 text-sm" v-model="columnFilter"
-                @change="applyFilter">
-                <option value="">All</option>
-                <option v-for="header in headers" :value="header" :key="header">
-                    {{ header.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
-                </option>
-            </select>
-            <input class="input input-sm input-bordered join-item" placeholder="Find" v-model="filterValue"
-                @input="applyFilter" />
-        </div>
-    </div>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th v-for="(header, key) in headers" :key="key" class="px-1 py-2 min-w-20">
-                    <span class="btn btn-xs btn-ghost" @click="toggleSort(key)">
-                        <span>
-                            {{ header.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
-                            <span v-if="sortable && sortColumn === key" class="ml-1">
-                                <font-awesome-icon v-if="ascending" icon="fa-solid fa-caret-up" />
-                                <font-awesome-icon v-else icon="fa-solid fa-caret-down" />
-                            </span>
-                        </span>
-                    </span>
-                </th>
-                <th v-if="$slots.actionButtons">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="hover" v-for="(item, index) in displayedData" :key="index">
-                <td v-for="(value, key) in item" :key="key">{{ value }}</td>
-                <td v-if="$slots.actionButtons">
-                    <slot name="actionButtons" :item="item"></slot>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-
-
-    <div class="flex justify-between">
-        <div class="text-xs mt-2 ml-2">
-            Showing {{ currentPage }} to {{ totalPages }} of {{ filteredData.length }}
-        </div>
-        <div class="join border border-primary" v-if="totalPages > 1">
-            <button class="join-item btn btn-sm p-2 btn-primary btn-outline" @click="goToPage(1)"
-                :class="{ 'btn-disabled': currentPage === 1 }">
-                <i class="fa-solid fa-angles-left"></i>
-            </button>
-            <button class="join-item btn btn-sm p-2 btn-primary btn-outline" @click="goToPage(currentPage - 1)"
-                :class="{ 'btn-disabled': currentPage === 1 }">
-                <i class="fa-solid fa-angle-left"></i>
-            </button>
-            <button v-for="(link, p) in links " :key="p" class="join-item btn btn-sm btn-primary btn-outline"
-                :class="{ 'btn-active': link.active }" @click="goToPage(p + 1)">
-                {{ link.label }}
-            </button>
-            <button class="join-item btn btn-sm p-2 btn-primary btn-outline" @click="goToPage(currentPage + 1)"
-                :class="{ 'btn-disabled': currentPage === totalPages }">
-                <i class="fa-solid fa-angle-right"></i>
-            </button>
-            <button class="join-item btn btn-sm p-2 btn-primary btn-outline" @click="goToPage(totalPages)"
-                :class="{ 'btn-disabled': currentPage === totalPages }">
-                <i class="fa-solid fa-angles-right"></i>
-            </button>
+    <!-- Table -->
+    <div class="relative overflow-x-auto">
+        <div class="flex flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+            <div class="flex items-center space-x-2">
+                <select id="perPage" v-model="perPage"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-auto p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option :value="option" v-for="option in perPageOptions" :key="'perPage-' + option">
+                        {{ option }}
+                    </option>
+                </select>
+                <label for="perPage" class="block text-sm font-medium text-gray-900 dark:text-white">
+                    entries per page
+                </label>
+            </div>
+            <div class="relative">
+                <fwb-input placeholder="Search" size="sm" id="table-search" v-model="q">
+                    <template #prefix>
+                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" />
+                        </svg>
+                    </template>
+                    <template #suffix>
+                        <Icon name="close"
+                            class="w-5 h-5 text-gray-500 hover:text-gray-700 hover:dark:text-gray-300 active:text-gray-400 active:dark:text-gray-600"
+                            @click="q = ''" />
+                    </template>
+                </fwb-input>
+            </div>
         </div>
     </div>
+
+    <div class="relative overflow-x-auto overflow-y-hidden shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-300">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-300">
+                <tr>
+                    <th v-for="(column, key) in columns" :key="key" scope="col"
+                        class="px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                        :class="`text-${column?.align || 'left'}`" @click="setSortKey(column.name)">
+                        <div class="flex items-center justify-between">
+                            {{ column.label }}
+                            <SortIcon :sortKey="sortKey" :sortOrder="sortOrder" :columnName="column.name" />
+                        </div>
+                    </th>
+                    <th scope="col"
+                        class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-right">
+                        <!-- Action -->
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="(item, index) in paginatedData" :key="index"
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <slot name="tbodyTd" :item="item" :columns="columns" :index="index">
+                        <template v-for="(value, key, i) in item" :key="key">
+                            <td v-if="columns.some(col => col.name === key)" class="px-4 py-2"
+                                :class="`text-${columns.find(col => col.name === key)?.align || 'left'}`">
+                                {{ value }}
+                            </td>
+                        </template>
+                    </slot>
+                    <td class="py-0 px-4 text-right">
+                        <slot name="actionColumn" :item="item" :columns="columns" :index="index"></slot>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Pagination -->
+    <Pagination v-model="currentPage" :per-page="perPage" :total-items="totalItems" :total-pages="totalPages"
+        :show-labels="false" show-icons />
 </template>
