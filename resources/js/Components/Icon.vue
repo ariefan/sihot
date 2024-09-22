@@ -48,4 +48,12 @@ const props = defineProps({
             <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6 12h.01m6 0h.01m5.99 0h.01" />
         </svg>
     </template>
+
+    <template v-else-if="name === 'angle-left'">
+        <svg :class="{ 'w-4 h-4': true }" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m15 19-7-7 7-7" />
+        </svg>
+    </template>
 </template>

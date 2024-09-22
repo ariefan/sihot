@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { AppLayout } from '@/Layouts';
 import { Breadcrumb, Button, DataTable, Icon } from '@/Components';
@@ -20,10 +21,12 @@ const columns = [
     { name: 'brand_description', label: 'Brand Description' },
     { name: 'updated_at', label: 'Tanggal Diperbarui', align: 'right' },
 ];
-const data = props.brands.map(item => ({
-    ...item,
-    updated_at: new Date(item.updated_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
-}));
+const data = computed(() => {
+    return props.brands.map(item => ({
+        ...item,
+        updated_at: new Date(item.updated_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
+    }));
+});
 
 const deleteAction = async (id) => {
     const result = await utils.confirm({

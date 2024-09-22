@@ -16,7 +16,7 @@ class BrandController extends Controller
      */
     public function index(Request $request)
     {
-        $brands = Brand::get();
+        $brands = Brand::orderBy('brand_name')->get();
 
         return Inertia::render('Brands/Index', [
             'brands' => $brands,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Brand;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -28,8 +29,11 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $brands = Brand::orderBy('brand_name')->get();
+
         return Inertia::render('Products/Form', [
-            'product' => null,
+            'product' => new Product,
+            'brands' => $brands,
         ]);
     }
 

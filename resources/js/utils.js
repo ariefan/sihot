@@ -1,30 +1,28 @@
 import Swal from "sweetalert2";
 
 const utils = {
-    date: {
-        // Formats a JavaScript Date object into a readable string
-        formatDate: function (
-            date,
-            options = { year: "numeric", month: "long", day: "numeric" }
-        ) {
-            const d = new Date(date);
-            return d.toLocaleDateString(undefined, options);
-        },
+    formatDateTime: function (
+        date,
+        options = { locale: "id-ID", dateStyle: "medium", timeStyle: "short" }
+    ) {
+        return new Date(date).toLocaleString(options.locale, options);
+    },
 
-        // Returns the difference in days between two dates
-        daysBetween: function (startDate, endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            const diffTime = Math.abs(end - start);
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        },
+    formatCurrency: function (
+        amount,
+        options = { locale: "id-ID", currency: "IDR" }
+    ) {
+        return new Intl.NumberFormat(options.locale, {
+            ...options,
+            style: "currency",
+        }).format(amount);
+    },
 
-        // Adds a specific number of days to a date
-        addDays: function (date, days) {
-            const result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result;
-        },
+    formatDecimal: function (
+        amount,
+        options = { locale: "id-ID", minimumFractionDigits: 2 }
+    ) {
+        return new Intl.NumberFormat(options.locale, options).format(amount);
     },
 
     image: {
@@ -70,6 +68,8 @@ const utils = {
             },
         });
     },
+
+    isLog: false,
 };
 
 export default utils;

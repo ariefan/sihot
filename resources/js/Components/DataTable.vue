@@ -61,7 +61,7 @@ const setSortKey = (key) => {
 <template>
     <!-- Table -->
     <div class="relative overflow-x-auto">
-        <div class="flex flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+        <div class="flex flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-2">
             <div class="flex items-center space-x-2">
                 <select id="perPage" v-model="perPage"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-auto p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -115,10 +115,9 @@ const setSortKey = (key) => {
                 <tr v-for="(item, index) in paginatedData" :key="index"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <slot name="tbodyTd" :item="item" :columns="columns" :index="index">
-                        <template v-for="(value, key, i) in item" :key="key">
-                            <td v-if="columns.some(col => col.name === key)" class="px-4 py-2"
-                                :class="`text-${columns.find(col => col.name === key)?.align || 'left'}`">
-                                {{ value }}
+                        <template v-for="(column, key) in columns" :key="key">
+                            <td class="px-4 py-3" :class="`text-${column.align || 'left'}`">
+                                {{ item[column.name] }}
                             </td>
                         </template>
                     </slot>
@@ -129,7 +128,6 @@ const setSortKey = (key) => {
             </tbody>
         </table>
     </div>
-
 
     <!-- Pagination -->
     <Pagination v-model="currentPage" :per-page="perPage" :total-items="totalItems" :total-pages="totalPages"

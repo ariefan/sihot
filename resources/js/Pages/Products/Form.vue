@@ -6,21 +6,20 @@ import Card from '@/Components/Card.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
-import Breadcrumb from '@/Components/Breadcrumb.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { Breadcrumb, Button, DataTable, Icon } from '@/Components';
+import { FwbButton } from 'flowbite-vue';
 
-// Props to receive the product when editing
 const props = defineProps({
-    product: Object, // This will be null when creating a product
+    product: Object,
 });
 
-// Initialize the form with useForm, setting initial values
 const form = useForm({
     product_name: props.product?.product_name || '',
-    brand_id: props.product?.brand_id,
-    tag: props.product?.tag,
+    brand_id: props.product?.brand_id || '',
+    tag: props.product?.tag || '',
     product_description: props.product?.product_description || '',
-    price: props.product?.price || 0.00,
+    price: props.product?.price || 0,
 });
 
 const title = (!!props.product ? 'Edit' : 'Tambah') + ' Product';
@@ -29,6 +28,8 @@ const breadcrumbs = [
     { name: 'Product', href: route('products.index') },
     { name: !!props.product ? 'Edit' : 'Tambah', href: '#' },
 ];
+
+const back = () => window.history.back();
 
 const saveAction = () => {
     if (!!props.product) {
@@ -41,16 +42,29 @@ const saveAction = () => {
 
 <template>
     <AppLayout :title="title">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                <Breadcrumb :title="title" :breadcrumbs="breadcrumbs" />
-            </h2>
-        </template>
-
-        <Card class="p-4">
-            <form @submit.prevent="saveAction">
+        <form @submit.prevent="saveAction">
+            <Card class="">
+                <template #header class="flex">
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        {{ title }}
+                    </h2>
+                </template>
 
                 <div class="grid grid-cols-2 gap-2">
+                    <!-- <template v-for="(value, key) in product" :key="key">
+                        <div v-if="!['id', 'user_id', 'updated_at', 'deleted_at', 'created_at'].includes(key)">
+                            <InputLabel :for="key"
+                                :value="key.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())" />
+                            <template v-if="typeof value === 'string'">
+                                <TextInput :id="key" v-model="form[key]" />
+                            </template>
+                            <template v-else-if="typeof value === 'number'">
+                                <TextInput :id="key" v-model="form[key]" type="number" />
+                            </template>
+                            <InputError :message="form.errors[key]" />
+                        </div>
+                    </template> -->
+
                     <div>
                         <InputLabel for="product_name" value="Name" />
                         <TextInput id="product_name" v-model="form.product_name" />
@@ -70,29 +84,28 @@ const saveAction = () => {
                     </div>
 
                     <div>
-                        <label for="product_description"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-200">Deskripsi</label>
-                        <textarea id="product_description" v-model="form.product_description"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                            :class="{ 'border-red-500': form.errors.product_description }"></textarea>
-                        <span v-if="form.errors.product_description" class="text-red-500 text-sm">
-                            {{ form.errors.product_description }}
-                        </span>
+                        <InputLabel for="product_description" value="Deskripsi" />
+                        <TextInput id="product_description" v-model="form.product_description" />
+                        <InputError :message="form.errors.product_description" />
                     </div>
 
                     <div>
                         <InputLabel for="price" value="Harga" />
-                        <TextInput id="price" v-model="form.price" />
+                        <TextInput id="price" v-model="form.price" type="number" />
                         <InputError :message="form.errors.price" />
                     </div>
                 </div>
-                <div class="flex justify-end mt-2">
-                    <PrimaryButton type="submit">
-                        Simpan
-                    </PrimaryButton>
-                </div>
-            </form>
-
-        </Card>
+                <template #footer>
+                    <div class="flex justify-end">
+                        <Button color="gray" class="mr-2" @click="back">
+                            Batal
+                        </Button>
+                        <Button color="blue" type="submit">
+                            Simpan
+                        </Button>
+                    </div>
+                </template>
+            </Card>
+        </form>
     </AppLayout>
 </template>

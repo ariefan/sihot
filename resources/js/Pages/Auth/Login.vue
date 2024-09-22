@@ -241,9 +241,9 @@ const submit = () => {
         </div>
 
         <div class="hidden lg:flex flex-1 items-center justify-center">
-            <div class="w-2/3">
-                <img src="https://i.ibb.co.com/x21qV8j/e0e30e0d-24d3-460e-95dc-998750d01b38.jpg" alt="login-welcome"
-                    class="w-full h-auto rounded-lg" />
+            <div class="w-2/3 flex justify-center">
+                <img src="https://www.svgheart.com/wp-content/uploads/2022/07/135_Fishing-min.png" alt="login-welcome"
+                    class="w-50 h-auto rounded-lg" />
             </div>
         </div>
     </section>

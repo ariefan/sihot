@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
     <nav class="flex justify-between" aria-label="Breadcrumb">
-        <span class="text-lg font-medium text-gray-300 dark:text-gray-200 font-semibold -py-2">
+        <span class="text-lg font-medium text-gray-700 dark:text-gray-400 font-semibold -py-2">
             {{ title }}
         </span>
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">

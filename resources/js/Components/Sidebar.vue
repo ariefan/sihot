@@ -39,48 +39,70 @@ defineProps({});
                         <span class="ml-3">Home</span>
                     </a>
                 </li>
-                <li>
-                    <Link :href="route('brands.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <span class="ml-3">Merk</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('products.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <span class="ml-3">Produk</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('suppliers.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <span class="ml-3">Supplier</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('suppliers.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <span class="ml-3">Customer</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('purchase-orders.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <span class="ml-3">Purchase Order</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('purchase-orders.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <span class="ml-3">Sales Order</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('suppliers.index')"
-                        class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <span class="ml-3">Inventori</span>
-                    </Link>
-                </li>
+                <template v-if="isLog">
+                    <li>
+                        <Link :href="route('brands.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Merk</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('products.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Produk</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('suppliers.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Supplier</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('suppliers.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Customer</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('pengajuan')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Pengajuan</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('purchase-orders.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Purchase Order</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('purchase-orders.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Sales Order</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('suppliers.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Inventori</span>
+                        </Link>
+                    </li>
+                </template>
+                <template v-else>
+                    <li>
+                        <Link :href="route('purchase-orders.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Room Type</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link :href="route('purchase-orders.index')"
+                            class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <span class="ml-3">Booking</span>
+                        </Link>
+                    </li>
+                </template>
                 <!-- <li>
                     <button type="button"
                         class="flex items-center p-2 w-full font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"

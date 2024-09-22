@@ -119,7 +119,7 @@ const deleteAction = async (id) => {
     });
 
     if (result.isConfirmed) {
-        uniqueKey.value++;
+        // uniqueKey.value++;
         form.delete(route("suppliers.destroy", id), {
             preserveScroll: true,
         });
@@ -196,7 +196,7 @@ const deleteAction = async (id) => {
                 </tr>
             </thead>
 
-            <tbody :key="uniqueKey">
+            <tbody>
                 <tr v-for="(item, index) in paginatedProducts" :key="index"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <template v-for="(value, key) in item" :key="key">

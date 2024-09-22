@@ -20,6 +20,14 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/pengajuan', function () {
+    return Inertia::render('Pengajuan');
+})->name('pengajuan');
+
+Route::get('/book', function () {
+    return Inertia::render('Book');
+})->name('book');
+
 if (App::environment('local')) {
     Route::get('/clear-all', function () {
         Artisan::call('cache:clear');
