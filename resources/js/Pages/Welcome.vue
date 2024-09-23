@@ -182,7 +182,7 @@ defineProps({
                         Welcome to our page
                     </h1>
                     <p class="max-w-2xl mb-6 font-light text-gray-50 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-100">
-                        From checkout to global sales tax compliance, companies around the world use Flowbite to
+                        From checkout to global sales tax compliance, companies around the globe use Flowbite to
                         simplify their payment stack.
                     </p>
                     <a href="#"
