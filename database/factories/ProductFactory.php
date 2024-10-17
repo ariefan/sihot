@@ -19,7 +19,7 @@ class ProductFactory extends Factory
     {
         return [
             'id' => fake()->uuid(),
-            'product_name' => fake()->word(),
+            'product_name' => fake()->unique()->word(),
             'brand_id' => function () {
                 return Brand::inRandomOrder()->first()->id;
             },

@@ -24,6 +24,22 @@ class ProductController extends Controller
         ]);
     }
 
+    public function suggestions(Request $request)
+    {
+        $query = $request->input('q');
+
+        if (! $query) {
+            return response()->json([]);
+        }
+
+        $products = Product::where('product_name', 'LIKE', '%'.$query.'%')
+            ->orderBy('product_name', 'asc')
+            ->limit(10)
+            ->get(['id as value', 'product_name as label']);
+
+        return response()->json($products);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

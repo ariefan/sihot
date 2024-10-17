@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('supplier_id')->constrained('suppliers')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('subject');
             $table->date('order_date');
             $table->string('status');
             $table->decimal('total_amount', 10, 2);

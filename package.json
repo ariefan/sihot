@@ -26,6 +26,7 @@
         "@sweetalert2/theme-dark": "^5.0.18",
         "flowbite-vue": "^0.1.6",
         "laravel-precognition-vue": "^0.5.9",
-        "sweetalert2": "^11.14.0"
+        "lodash": "^4.17.21",
+        "sweetalert2": "^11.6.13"
     }
 }

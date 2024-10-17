@@ -3,6 +3,8 @@ import { Link } from '@inertiajs/vue3';
 
 defineProps({});
 
+const isLog = true;
+
 </script>
 
 <template>
@@ -91,7 +93,7 @@ defineProps({});
                 </template>
                 <template v-else>
                     <li>
-                        <Link :href="route('purchase-orders.index')"
+                        <Link :href="route('room-types.index')"
                             class="flex items-center p-2 font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                         <span class="ml-3">Room Type</span>
                         </Link>

@@ -2,8 +2,7 @@
 import { useForm, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Card from '@/Components/Card.vue';
-import { Breadcrumb, Button, DataTable, Icon, InputError, InputLabel, TextInput } from '@/Components';
+import { Breadcrumb, Button, Card, DataTable, Icon, InputError, InputLabel, TextInput } from '@/Components';
 import { FwbButton } from 'flowbite-vue';
 
 const props = defineProps({

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\App;
@@ -55,6 +56,7 @@ Route::middleware([
     Route::resources([
         'brands' => BrandController::class,
         'products' => ProductController::class,
+        'room-types' => RoomTypeController::class,
         'suppliers' => SupplierController::class,
         'purchase-orders' => PurchaseOrderController::class,
     ]);

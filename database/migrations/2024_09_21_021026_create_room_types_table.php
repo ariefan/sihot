@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('base_price', 10, 2)->default(0);
             $table->integer('max_guests')->default(2);
-            $table->json('photos');
+            $table->json('photos')->nullable();
             $table->timestamps();
         });
     }
