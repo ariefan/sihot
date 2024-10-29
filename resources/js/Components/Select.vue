@@ -7,19 +7,10 @@ defineProps({
 
 defineEmits(['update:modelValue']);
 
-const input = ref(null);
-
-onMounted(() => {
-    if (input.value.hasAttribute('autofocus')) {
-        input.value.focus();
-    }
-});
-
-defineExpose({ focus: () => input.value.focus() });
 </script>
 
 <template>
-    <input ref="input" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="
+    <select :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="
         bg-gray-50
         border
         border-gray-300
@@ -34,5 +25,7 @@ defineExpose({ focus: () => input.value.focus() });
         dark:placeholder-gray-400
         dark:text-gray-100
         dark:focus:ring-primary-600
-        dark:focus:border-primary-600" />
+        dark:focus:border-primary-600">
+        <slot />
+    </select>
 </template>

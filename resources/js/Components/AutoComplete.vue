@@ -1,38 +1,41 @@
 <template>
     <div class="relative w-full" @keydown.down.prevent="onArrowDown" @keydown.up.prevent="onArrowUp"
-        @keydown.enter.prevent="onEnter">
-        <input type="text" :value="displayLabel" @input="onInput($event.target.value)" :placeholder="placeholder" class="bg-gray-50
-        border
-        border-gray-300
-        text-gray-900
-        rounded-md
-        focus:ring-primary-500
-        focus:border-primary-500
-        block
-        w-full
-        dark:bg-gray-900
-        dark:border-gray-700
-        dark:placeholder-gray-400
-        dark:text-gray-100
-        dark:focus:ring-primary-600
-        dark:focus:border-primary-600" @focus="isDropdownVisible = true" @blur="hideDropdown" />
+        @keydown.enter.prevent="onEnter" ref="autocomplete">
+        <div class="flex">
+            <!-- Input field -->
+            <input type="text" :value="displayLabel" @input="onInput($event.target.value)" :placeholder="placeholder"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:ring-primary-500 focus:border-primary-500 block w-full
+                dark:bg-gray-900 dark:border-gray-700 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-primary-600 dark:focus:border-primary-600"
+                @focus="showDropdown" ref="textInput" />
+        </div>
 
+        <!-- Dropdown button with hover effect -->
+        <!-- <button type="button" @click="onButtonClick"
+                class="bg-gray-300 border border-gray-300 text-gray-900 px-2 rounded-r-md focus:outline-none hover:bg-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600">
+                &#x25BC;
+            </button> -->
+
+        <!-- Dropdown suggestions list -->
         <ul v-if="isDropdownVisible && suggestions.length"
             class="absolute w-full bg-white border border-gray-300 rounded-md mt-1 z-10">
-            <li v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)"
-                @mousedown="selectSuggestion(suggestion)"
-                :class="['cursor-pointer px-4 py-2 hover:bg-gray-100', { 'bg-gray-200': index === highlightedIndex }]">
-                {{ suggestion.label }}
-            </li>
+            <template v-for="(suggestion, index) in suggestions.slice(0, 10)" :key="index">
+                <slot name="suggestion-item" :suggestion="suggestion" :highlighted="index === highlightedIndex"
+                    @click="selectSuggestion(suggestion)" @mousedown="selectSuggestion(suggestion)">
+                    <!-- Default rendering if no slot provided -->
+                    <li @click="selectSuggestion(suggestion)" @mousedown="selectSuggestion(suggestion)"
+                        :class="['cursor-pointer px-4 py-2 hover:bg-gray-100', { 'bg-gray-200': index === highlightedIndex }]">
+                        {{ suggestion.label }}
+                    </li>
+                </slot>
+            </template>
         </ul>
     </div>
 </template>
 
 <script setup>
-import { ref, watch, defineProps, defineEmits } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { debounce } from 'lodash';
 
-// Props for configurable behavior
 const props = defineProps({
     modelValue: {
         type: String,
@@ -40,102 +43,138 @@ const props = defineProps({
     },
     apiUrl: {
         type: String,
-        default: '/api/products/suggestions'  // Default URL
+        default: '/api/products/suggestions'
     },
     debounceTime: {
         type: Number,
-        default: 500  // Default debounce time in milliseconds
+        default: 300
     },
     placeholder: {
         type: String,
-        default: 'Search...'  // Default input placeholder
+        default: 'Search...'
     },
     label: {
         type: String,
-        default: ''  // Default label to be shown in the input (if provided)
+        default: ''
     }
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'update:label']);
 
-// Define reactive data
-const query = ref('');  // Query is for displaying input as the user types
-const selectedValue = ref(props.modelValue);  // Holds the selected value
+const query = ref('');
+const selectedValue = ref(props.modelValue);
+const selectedLabel = ref(props.label);
+const displayLabel = ref(selectedLabel.value);
 const suggestions = ref([]);
 const isDropdownVisible = ref(false);
-const highlightedIndex = ref(-1);  // Tracks the current highlighted suggestion index
-const displayLabel = ref(props.label);  // This is the label shown in the input field, initialized with label
+const highlightedIndex = ref(-1);
 
-// Watch for changes in v-model (in case it's updated from parent)
+// Watch for changes to modelValue
 watch(() => props.modelValue, (newValue) => {
     selectedValue.value = newValue;
-    // When the value changes externally, reset the display label
     const selectedSuggestion = suggestions.value.find(suggestion => suggestion.value === newValue);
-    displayLabel.value = selectedSuggestion ? selectedSuggestion.label : props.label;  // Use label if no suggestion found
+    selectedLabel.value = selectedSuggestion ? selectedSuggestion.label : '';
+    displayLabel.value = selectedLabel.value || query.value;
 });
 
-// Function to search for suggestions (returns value-label pairs)
+// Fetch suggestions
 const searchSuggestions = async () => {
-    if (query.value.length > 0) {
-        const response = await fetch(`${props.apiUrl}?q=${query.value}`);
-        const data = await response.json();
-        suggestions.value = data;
-        highlightedIndex.value = -1;  // Reset highlighted index when new suggestions load
-    } else {
-        suggestions.value = [];
-    }
+    const response = await fetch(`${props.apiUrl}?q=${query.value}`);
+    const data = await response.json();
+    suggestions.value = data;
+    highlightedIndex.value = -1;
 };
 
-// Debounced search function using lodash debounce
+// Debounced search
 const debouncedSearch = debounce(searchSuggestions, props.debounceTime);
 
-// Function triggered on input event
+// Handle input change
 const onInput = (value) => {
     query.value = value;
-    displayLabel.value = value;  // Keep showing the input field value
+    displayLabel.value = value;
+    selectedValue.value = '';
+    selectedLabel.value = '';
+    emit('update:modelValue', '');  // Clear value
+    emit('update:label', '');  // Clear label
     isDropdownVisible.value = true;
     debouncedSearch();
 };
 
-// Function to select suggestion
+// Select a suggestion
 const selectSuggestion = (suggestion) => {
-    displayLabel.value = suggestion.label;  // Keep the label in the input
-    selectedValue.value = suggestion.value;  // Store the selected value (like a select input)
-    emit('update:modelValue', selectedValue.value);  // Emit the selected value to parent
-    isDropdownVisible.value = false;  // Close the dropdown after selection
+    selectedValue.value = suggestion.value;
+    selectedLabel.value = suggestion.label;
+    displayLabel.value = selectedLabel.value;
+    emit('update:modelValue', selectedValue.value);
+    emit('update:label', selectedLabel.value);
+    isDropdownVisible.value = false;
 };
 
-// Function to handle arrow down key
+// Show dropdown on button click and focus on the input
+const onButtonClick = () => {
+    if (!isDropdownVisible.value) {
+        // Focus on the input field
+        textInput.value.focus();
+        // If no keyword typed, fetch suggestions with empty query
+        if (query.value.length === 0) {
+            searchSuggestions();
+        }
+        isDropdownVisible.value = true;
+    } else {
+        isDropdownVisible.value = false;
+    }
+};
+
+// Show dropdown on input focus
+const showDropdown = () => {
+    isDropdownVisible.value = true;
+};
+
+// Hide dropdown when clicking outside
+const hideDropdownOnOutsideClick = (event) => {
+    if (!autocomplete.value.contains(event.target)) {
+        isDropdownVisible.value = false;
+    }
+};
+
+// Add click event listener to detect clicks outside component
+const autocomplete = ref(null);
+const textInput = ref(null);
+onMounted(() => {
+    document.addEventListener('click', hideDropdownOnOutsideClick);
+});
+
+// Remove click event listener when component is unmounted
+onBeforeUnmount(() => {
+    document.removeEventListener('click', hideDropdownOnOutsideClick);
+});
+
+// Handle arrow down key
 const onArrowDown = () => {
     if (highlightedIndex.value < suggestions.value.length - 1) {
         highlightedIndex.value++;
     } else {
-        highlightedIndex.value = 0;  // Loop back to the top
+        highlightedIndex.value = 0;
     }
 };
 
-// Function to handle arrow up key
+// Handle arrow up key
 const onArrowUp = () => {
     if (highlightedIndex.value > 0) {
         highlightedIndex.value--;
     } else {
-        highlightedIndex.value = suggestions.value.length - 1;  // Loop to the bottom
+        highlightedIndex.value = suggestions.value.length - 1;
     }
 };
 
-// Function to handle enter key
+// Handle enter key
 const onEnter = () => {
     if (highlightedIndex.value !== -1 && suggestions.value[highlightedIndex.value]) {
         selectSuggestion(suggestions.value[highlightedIndex.value]);
     }
 };
-
-// Function to hide dropdown on blur
-const hideDropdown = () => {
-    setTimeout(() => isDropdownVisible.value = false, 100);  // Small delay to allow for click
-};
 </script>
 
 <style scoped>
-/* Tailwind handles the styling, no additional styles are necessary */
+/* Tailwind CSS already applies most of the styling, including hover states for the button */
 </style>

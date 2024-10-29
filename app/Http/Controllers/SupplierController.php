@@ -23,6 +23,22 @@ class SupplierController extends Controller
         ]);
     }
 
+    public function suggestions(Request $request)
+    {
+        $query = $request->input('q');
+
+        if (! $query) {
+            return response()->json([]);
+        }
+
+        $products = Supplier::where('supplier_name', 'LIKE', '%'.$query.'%')
+            ->orderBy('supplier_name', 'asc')
+            ->limit(10)
+            ->get(['id as value', 'supplier_name as label']);
+
+        return response()->json($products);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
